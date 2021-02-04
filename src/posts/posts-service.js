@@ -30,7 +30,7 @@ const PostsService = {
         .returning('*')
         .then(([post]) => post)
     },
-    deleteNote(knex, id){
+    deletePost(knex, id){
         return knex('ridespot_posts')
             .where('post_id', id)
             .delete()
