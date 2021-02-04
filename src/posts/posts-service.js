@@ -30,6 +30,11 @@ const PostsService = {
         .returning('*')
         .then(([post]) => post)
     },
+    deleteNote(knex, id){
+        return knex('ridespot_posts')
+            .where('post_id', id)
+            .delete()
+    },
     serializePost(post) {
         return {
             post_id: post.post_id,

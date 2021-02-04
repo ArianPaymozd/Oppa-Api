@@ -56,4 +56,18 @@ postsRouter
     .catch(next)
 })
 
+postsRouter
+.route('/:post_id')
+.all(requireAuth)
+.delete((req, res, next) => {
+    PostsService.deletePost(
+        req.app.get('db'),
+        req.params.post_id
+    )
+    .then(() => {
+        res.status(204).end()
+    })
+    .catch(next)
+})
+
 module.exports = postsRouter
