@@ -130,7 +130,6 @@ function seedUsers(db, users) {
   }))
   return db.into('ridespot_users').insert(preppedUsers)
     .then(() =>
-      // update the auto sequence to stay in sync
       db.raw(
         `SELECT setval('ridespot_users_id_seq', ?)`,
         [users[users.length - 1].id],
@@ -139,7 +138,6 @@ function seedUsers(db, users) {
 }
 
 function seedPostsTables(db, users, posts) {
-  // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
     await trx.into('ridespot_posts').insert(posts)

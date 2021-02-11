@@ -1,26 +1,107 @@
-# Express Boilerplate!
+# RideSpot Server API
 
-This is a boilerplate project used for starting new projects!
+This is the backend API for the RideSpot app
 
-## Set up
+## Documentation
+GET: https://immense-headland-15591.herokuapp.com/api/posts,
+Returns all posts
+Response: content-type: JSON, content: 
+{
+    {
+        post_id: INTEGER,
+        title: STRING,
+        sport: STRING,
+        user_id: INT,
+        modified: STRING,
+        spot_description: STRING
+        img: STRING (link),
+        spot_address: STRING,
+        security_level: STRING,
+        difficulty: STRING,
+    }
+}
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+GET: https://immense-headland-15591.herokuapp.com/api/posts/:user_id,
+Return all posts for given user
+Authorization: required
+Response: content-type: JSON, content: 
+{
+    {
+        post_id: INTEGER,
+        title: STRING,
+        sport: STRING,
+        user_id: INT,
+        modified: STRING,
+        spot_description: STRING
+        img: STRING (link),
+        spot_address: STRING,
+        security_level: STRING,
+        difficulty: STRING,        
+    }
+}
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+GET: https://immense-headland-15591.herokuapp.com/api/users/:user_id,
+Return user information by user_id
+Authorization: required
+Response: content-type: JSON, content: 
+{
+    full_name: STRING,
+    email: STRING,
+    username: STRING,
+    password: STRING,
+    id: INT
+}
 
-## Scripts
 
-Start the application `npm start`
+DELETE: https://immense-headland-15591.herokuapp.com/api/posts/:post_id,
+Delete post by post_id
+Authorization: required
+Response: status(204)
 
-Start nodemon for the application `npm run dev`
+POST: https://immense-headland-15591.herokuapp.com/api/posts,
+Adds an entry to posts list
+Authorization: required
+Request Body: 
+{
+    post_id: INTEGER, required
+    title: STRING, required
+    sport: STRING, required
+    user_id: INT, required
+    modified: STRING, required
+    spot_description: STRING, required
+    img: STRING (link), required
+    spot_address: STRING, required
+    security_level: STRING, required
+    difficulty: STRING, required       
+}
+Response: content-type: JSON, status(201)
+{
+    post_id: INTEGER,
+    title: STRING,
+    sport: STRING,
+    user_id: INT,
+    modified: STRING,
+    spot_description: STRING,
+    img: STRING (link),
+    spot_address: STRING,
+    security_level: STRING,
+    difficulty: STRING,        
+}
 
-Run the tests `npm test`
+POST: https://immense-headland-15591.herokuapp.com/api/users,
+Adds a user to user list
+Request Body: 
+{
+    full_name: STRING, required
+    email: STRING, required
+    username: STRING, required
+    password: STRING, required     
+}
+Response: content-type: JSON, status(201)
+{
+    full_name: STRING,
+    email: STRING,
+    username: STRING,
+    password: STRING,   
+}
 
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's main branch.
