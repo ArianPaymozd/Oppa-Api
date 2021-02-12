@@ -2,7 +2,7 @@ const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Protected endpoints', function() {
+describe('Protected endpoints', function () {
   let db
 
   const {
@@ -34,31 +34,31 @@ describe('Protected endpoints', function() {
 
   const protectedEndpoints = [
     {
-        name: 'GET /api/posts/:user_id',
-        path: '/api/posts/1',
-        method: supertest(app).get,
+      name: 'GET /api/posts/:user_id',
+      path: '/api/posts/1',
+      method: supertest(app).get,
     },
     {
-        name: 'GET /api/users/:user_id',
-        path: '/api/users/1',
-        method: supertest(app).get,
+      name: 'GET /api/users/:user_id',
+      path: '/api/users/1',
+      method: supertest(app).get,
     },
     {
-        name: 'DELETE /api/posts/:post_id',
-        path: '/api/posts/1',
-        method: supertest(app).delete,
+      name: 'DELETE /api/posts/:post_id',
+      path: '/api/posts/1',
+      method: supertest(app).delete,
     },
     {
-        name: 'post /api/posts',
-        path: '/api/posts',
-        method: supertest(app).post,
+      name: 'post /api/posts',
+      path: '/api/posts',
+      method: supertest(app).post,
     },
     {
-        name: 'POST /api/auth/refresh',
-        path: '/api/auth/refresh',
-        method: supertest(app).post,
+      name: 'POST /api/auth/refresh',
+      path: '/api/auth/refresh',
+      method: supertest(app).post,
     },
-]
+  ]
 
   protectedEndpoints.forEach(endpoint => {
     describe(endpoint.name, () => {

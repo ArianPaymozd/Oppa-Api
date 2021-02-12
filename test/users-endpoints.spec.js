@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Users Endpoints', function() {
+describe('Users Endpoints', function () {
   let db
 
   const { testUsers } = helpers.makePostsFixtures()
@@ -41,13 +41,13 @@ describe('Users Endpoints', function() {
   })
   describe(`GET /api/users/:user_id`, () => {
     beforeEach('insert users', () =>
-        helpers.seedUsers(
+      helpers.seedUsers(
         db,
         testUsers,
-        )
+      )
     )
     it(`responds 200, `, () => {
-    return supertest(app)
+      return supertest(app)
         .get('/api/users/1')
         .set('Authorization', helpers.makeAuthHeader(testUser))
         .expect(200)

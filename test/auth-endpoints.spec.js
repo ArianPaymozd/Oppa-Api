@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Auth Endpoints', function() {
+describe('Auth Endpoints', function () {
   let db
 
   const { testUsers } = helpers.makePostsFixtures()
@@ -30,7 +30,7 @@ describe('Auth Endpoints', function() {
         testUsers,
       )
     )
-    
+
     it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
       const userValidCreds = {
         user_name: testUser.user_name,
