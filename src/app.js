@@ -4,9 +4,10 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
-const postsRouter = require('./posts/posts-route')
+const worksheetsRouter = require('./worksheets/worksheets-route')
 const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-route')
+const classesRouter = require('./classes/classes-route')
 
 const app = express()
 
@@ -22,7 +23,8 @@ app.get(('/'), (req, res) => {
   res.send('Hello, world!')
 })
 
-app.use('/api/posts', postsRouter)
+app.use('/api/classes', classesRouter)
+app.use('/api/worksheets', worksheetsRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 

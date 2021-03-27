@@ -9,9 +9,9 @@ const jsonBodyParser = express.json()
 
 usersRouter
   .post('/', jsonBodyParser, (req, res, next) => {
-    const { password, user_name, full_name, email } = req.body
+    const { full_name, username, password } = req.body
 
-    for (const field of ['password', 'user_name', 'full_name', 'email']) {
+    for (const field of ['password', 'username']) {
       if (!req.body[field]) {
         return res.status(400).json({
           error: `Missing '${field}' in request body`
@@ -19,11 +19,20 @@ usersRouter
       }
     }
 
-    if (user_name.startsWith(' ') || user_name.endsWith(' ')) {
+    if (username.startsWith(' ') || username.endsWith(' ')) {
       return res.status(400).json({
         error: `Username can't start or end with spaces`
       })
     }
+    UsersService.usernameExists(req.app.get('db'), username)
+    .then(user => {
+      if (user) {
+        return res.status(400).json({
+          error: `Username already exists`
+        })
+      }
+    })
+
 
     const passwordError = UsersService.validatePassword(password)
 
@@ -33,23 +42,12 @@ usersRouter
       })
     }
 
-    UsersService.usernameExists(
-      req.app.get('db'),
-      user_name
-    )
-      .then(usernameExists => {
-        if (usernameExists) {
-          return res.status(400).json({
-            error: `Username already taken`
-          })
-        }
-        return UsersService.hashPassword(password)
+    UsersService.hashPassword(password)
           .then(hashedPassword => {
             const newUser = {
-              user_name,
               password: hashedPassword,
               full_name,
-              email,
+              username,
               date_created: 'now()'
             }
             return UsersService.insertUser(
@@ -62,9 +60,8 @@ usersRouter
                   .location(path.posix.join(req.originalUrl, `/${user.id}`))
                   .json(UsersService.serializeUser(user))
               })
+              .catch(next)
           })
-      })
-      .catch(next)
   })
 usersRouter
   .route('/:user_id')

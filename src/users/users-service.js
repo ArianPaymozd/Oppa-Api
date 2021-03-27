@@ -5,26 +5,33 @@ const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*
 
 const UsersService = {
   getAllUsers(db) {
-    return db('ridespot_users')
+    return db('oppa_teachers')
       .select('*')
-      .from('ridespot_users')
+      .from('oppa_teachers')
   },
-  getByUser(db, user_id) {
+  getByUser(db, id) {
     return UsersService.getAllUsers(db)
-      .from('ridespot_users AS user')
-      .where('user.id', user_id)
+      .from('oppa_teachers AS user')
+      .where('user.id', id)
       .first()
   },
-  usernameExists(db, user_name) {
-    return db('ridespot_users')
-      .where({ user_name })
+  usernameExists(db, username) {
+    return db
+      .from('oppa_teachers')
+      .select('*')
+      .where({ username })
       .first()
-      .then(user => !!user)
+  },
+  getByClass(db, class_id) {
+    return db
+      .from('oppa_worksheets')
+      .select('*')
+      .where({ class_id })
   },
   insertUser(db, newUser) {
     return db
       .insert(newUser)
-      .into('ridespot_users')
+      .into('oppa_teachers')
       .returning('*')
       .then(([user]) => user)
   },
@@ -47,8 +54,6 @@ const UsersService = {
     return {
       id: user.id,
       full_name: xss(user.full_name),
-      user_name: xss(user.user_name),
-      email: xss(user.email),
       date_created: new Date(user.date_created),
     }
   }

@@ -3,9 +3,10 @@ const jwt = require('jsonwebtoken')
 const config = require('../config')
 
 const AuthService = {
-	getUserWithUserName(db, user_name) {
-		return db('ridespot_users')
-			.where({ user_name })
+	getUserWithUserName(db, username) {
+		return db('oppa_teachers')
+			.select('*')
+			.where({ username })
 			.first()
 	},
 	comparePasswords(password, hash) {
