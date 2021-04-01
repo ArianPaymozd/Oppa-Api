@@ -5,13 +5,8 @@ pg.defaults.ssl = process.env.NODE_ENV === "production";
 module.exports = {
     "migrationsDirectory": "migrations",
     "driver": "pg",
-    "username": "username",
-    "password": "password",
-    "database": "database",
-    "host": "host",
-    "dialect": "postgres",
-    "dialectOptions": {
-        "ssl": true
-    }
+    "connectionString": (process.env.NODE_ENV === 'test')
+    ? process.env.TEST_DATABASE_URL
+    : process.env.DATABASE_URL,
         
 }
