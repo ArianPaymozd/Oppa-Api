@@ -3,7 +3,12 @@ require('dotenv').config()
 module.exports = {
     "migrationsDirectory": "migrations",
     "driver": "pg",
-    "connectionString": (process.env.NODE_ENV === 'test')
-    ? process.env.TEST_DATABASE_URL
-    : process.env.DATABASE_URL,
+    "username": process.env.DATABASE_USER,
+    "password":  process.env.DATABASE_PASSWORD,
+    "database":  process.env.DATABASE_NAME,
+    "host":  process.env.DATABASE_HOST,
+    "dialect": "postgres",
+    "dialectOptions": {
+    "ssl": true
+    }
 }
