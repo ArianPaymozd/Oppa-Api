@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const WorksheetsService = require('./worksheets-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const { requireAuthTeacher, requireAuthStudent } = require('../middleware/jwt-auth')
 const { json } = require('express')
 
 const postsRouter = express.Router()
@@ -9,16 +9,9 @@ const jsonBodyParser = express.json()
 
 postsRouter
   .route('/')
-  // .get((req, res, next) => {
-  //   WorksheetsService.getAllPosts(req.app.get('db'))
-  //     .then(posts => {
-  //       res.json(posts)
-  //     })
-  //     .catch(next)
-  // })
-  .post(requireAuth, jsonBodyParser, async (req, res, next) => {
-    const { worksheet_name, class_id, animation_scroll, animation_questions, reading } = req.body
-    const newWorksheet = { worksheet_name, class_id, animation_scroll, animation_questions, reading }
+  .post(requireAuthTeacher, jsonBodyParser, async (req, res, next) => {
+    const { worksheet_name, class_id, animation_scroll, reading } = req.body
+    const newWorksheet = { worksheet_name, class_id, animation_scroll, reading }
 
     for (const [key, value] of Object.entries(newWorksheet)) {
       if (value == null) {
@@ -33,7 +26,6 @@ postsRouter
       class_password: updateClass[0].class_password,
       students: updateClass[0].students,
       worksheets: (updateClass[0].worksheets + 1),
-      modified: updateClass[0].modified,
       teacher_id: updateClass[0].teacher_id,
     }
 
@@ -42,15 +34,6 @@ postsRouter
         newClass,
         class_id
     )
-    console.log(newClass, {
-      class_id: updateClass[0].class_id,
-      class_name: updateClass[0].class_name,
-      class_password: updateClass[0].class_password,
-      students: updateClass[0].students,
-      worksheets: (updateClass[0].worksheets + 1),
-      modified: updateClass[0].modified,
-      teacher_id: updateClass[0].teacher_id,
-    })
     WorksheetsService.insertPost(
       req.app.get('db'),
       newWorksheet
@@ -60,16 +43,15 @@ postsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${post.worksheet_id}`))
-          .json(post)
+          .end()
       })
 
   })
 
 postsRouter
   .route('/:class_id')
-  .all(requireAuth)
+  .all(requireAuthTeacher)
   .get((req, res, next) => {
-    console.log(req.params.class_id)
     WorksheetsService.getByClass(req.app.get('db'), req.params.class_id)
       .then(posts => {
         res.status(200).json(posts)
@@ -78,15 +60,12 @@ postsRouter
   })
 
 postsRouter
-  .route('/:post_id')
-  .all(requireAuth)
-  .delete((req, res, next) => {
-    WorksheetsService.deletePost(
-      req.app.get('db'),
-      req.params.post_id
-    )
-      .then(() => {
-        res.status(204).end()
+  .route('/students/:class_id')
+  .all(requireAuthStudent)
+  .get((req, res, next) => {
+    WorksheetsService.getByClass(req.app.get('db'), req.params.class_id)
+      .then(posts => {
+        res.status(200).json(posts)
       })
       .catch(next)
   })

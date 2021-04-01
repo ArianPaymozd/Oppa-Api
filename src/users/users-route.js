@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const AuthService = require('../auth/auth-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const { requireAuthTeacher } = require('../middleware/jwt-auth')
 const UsersService = require('./users-service')
 
 const usersRouter = express.Router()
@@ -9,7 +9,7 @@ const jsonBodyParser = express.json()
 
 usersRouter
   .post('/', jsonBodyParser, (req, res, next) => {
-    const { full_name, username, password } = req.body
+    const { full_name, username, password, userType } = req.body
 
     for (const field of ['password', 'username']) {
       if (!req.body[field]) {
@@ -42,6 +42,20 @@ usersRouter
       })
     }
 
+    function insertUser(newUser) {
+      if (userType === 'teacher') {
+        return UsersService.insertTeacher(
+          req.app.get('db'),
+          newUser
+        )
+      } else {
+          return UsersService.insertStudent(
+            req.app.get('db'),
+            newUser
+          )
+        }
+    }
+
     UsersService.hashPassword(password)
           .then(hashedPassword => {
             const newUser = {
@@ -50,26 +64,14 @@ usersRouter
               username,
               date_created: 'now()'
             }
-            return UsersService.insertUser(
-              req.app.get('db'),
-              newUser
-            )
+              insertUser(newUser)
               .then(user => {
                 res
                   .status(201)
-                  .location(path.posix.join(req.originalUrl, `/${user.id}`))
                   .json(UsersService.serializeUser(user))
               })
-              .catch(next)
           })
-  })
-usersRouter
-  .route('/:user_id')
-  .all(requireAuth)
-  .get((req, res, next) => {
-    UsersService.getByUser(req.app.get('db'), req.params.user_id)
-      .then(users => res.json(users))
-      .catch(next)
+              .catch(next)
   })
 
 module.exports = usersRouter

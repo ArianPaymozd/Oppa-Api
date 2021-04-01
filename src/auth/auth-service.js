@@ -3,8 +3,14 @@ const jwt = require('jsonwebtoken')
 const config = require('../config')
 
 const AuthService = {
-	getUserWithUserName(db, username) {
+	getTeacherWithUserName(db, username) {
 		return db('oppa_teachers')
+			.select('*')
+			.where({ username })
+			.first()
+	},
+	getStudentWithUserName(db, username) {
+		return db('oppa_students')
 			.select('*')
 			.where({ username })
 			.first()

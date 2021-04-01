@@ -45,11 +45,6 @@ const WorksheetsService = {
       .returning('*')
       .then(([post]) => post)
   },
-  deletePost(knex, id) {
-    return knex('ridespot_posts')
-      .where('post_id', id)
-      .delete()
-  },
 }
 
 module.exports = WorksheetsService

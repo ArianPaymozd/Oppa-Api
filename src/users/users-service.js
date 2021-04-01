@@ -28,10 +28,17 @@ const UsersService = {
       .select('*')
       .where({ class_id })
   },
-  insertUser(db, newUser) {
+  insertTeacher(db, newUser) {
     return db
       .insert(newUser)
       .into('oppa_teachers')
+      .returning('*')
+      .then(([user]) => user)
+  },
+  insertStudent(db, newUser) {
+    return db
+      .insert(newUser)
+      .into('oppa_students')
       .returning('*')
       .then(([user]) => user)
   },

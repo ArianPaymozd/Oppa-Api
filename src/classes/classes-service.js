@@ -6,11 +6,24 @@ const PostsService = {
       .from('oppa_classes')
       .select('*')
   },
-  getByUser(db, teacher_id) {
-    return PostsService.getAllPosts(db)
+  getByTeacher(db, teacher_id) {
+    return db
       .from('oppa_classes')
       .select('*')
       .where({ teacher_id })
+  },
+  async getById(db, class_id) {
+    return db
+      .from('oppa_classes')
+      .select('*')
+      .where({ class_id })
+      .first()
+  },
+  getByStudent(db, student_id) {
+    return db
+      .from('student_classes')
+      .select('*')
+      .where({ student_id })
   },
   insertPost(db, newPost) {
     return db
@@ -19,12 +32,25 @@ const PostsService = {
       .returning('*')
       .then(([post]) => post)
   },
-  deletePost(knex, id) {
-    return knex('oppa_classes')
-      .where('post_id', id)
+  async updateStudentCount(db, newClass, class_id) {
+    return db
+      .from('oppa_classes As course')
+      .update(newClass)
+      .where({class_id})
+  },
+  insertStudentClass(db, newPost) {
+    return db
+      .insert(newPost)
+      .into('student_classes')
+      .returning('*')
+      .then(([post]) => post)
+  },
+  deletePost(db, class_id) {
+    return db
+      .from('oppa_classes')
+      .where({class_id})
       .delete()
   },
-
   serializePost(post) {
     return {
       post_id: post.post_id,

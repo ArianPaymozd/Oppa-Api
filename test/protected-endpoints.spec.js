@@ -6,8 +6,8 @@ describe('Protected endpoints', function () {
   let db
 
   const {
-    testUsers,
-    testPosts,
+    testTeachers,
+    testClasses,
   } = helpers.makePostsFixtures()
 
   before('make knex instance', () => {
@@ -24,40 +24,55 @@ describe('Protected endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  beforeEach('insert posts', () =>
-    helpers.seedPostsTables(
+  beforeEach('insert classes', () =>
+    helpers.seedClassesTables(
       db,
-      testUsers,
-      testPosts,
+      testTeachers,
+      testClasses,
     )
   )
 
   const protectedEndpoints = [
     {
-      name: 'GET /api/posts/:user_id',
-      path: '/api/posts/1',
+      name: 'GET /api/classes/:teacher_id',
+      path: '/api/classes/1',
       method: supertest(app).get,
     },
     {
-      name: 'GET /api/users/:user_id',
-      path: '/api/users/1',
+      name: 'GET /api/classes/students/:student_id',
+      path: '/api/classes/students/1',
       method: supertest(app).get,
     },
     {
-      name: 'DELETE /api/posts/:post_id',
-      path: '/api/posts/1',
-      method: supertest(app).delete,
-    },
-    {
-      name: 'post /api/posts',
-      path: '/api/posts',
+      name: 'post /api/classes/students',
+      path: '/api/classes/students',
       method: supertest(app).post,
     },
     {
-      name: 'POST /api/auth/refresh',
-      path: '/api/auth/refresh',
+      name: 'post /api/classes',
+      path: '/api/classes',
       method: supertest(app).post,
     },
+    {
+      name: 'GET /api/worksheets/:class_id',
+      path: '/api/worksheets/1',
+      method: supertest(app).get,
+    },
+    {
+      name: 'GET /api/worksheets/students/:class_id',
+      path: '/api/worksheets/students/1',
+      method: supertest(app).get,
+    },
+    {
+      name: 'post /api/classes',
+      path: '/api/worksheets',
+      method: supertest(app).post,
+    },
+    // {
+    //   name: 'DELETE /api/classes/:post_id',
+    //   path: '/api/classes/1',
+    //   method: supertest(app).delete,
+    // },
   ]
 
   protectedEndpoints.forEach(endpoint => {
@@ -68,7 +83,7 @@ describe('Protected endpoints', function () {
       })
 
       it(`responds 401 'Unauthorized request' when invalid JWT secret`, () => {
-        const validUser = testUsers[0]
+        const validUser = testTeachers[0]
         const invalidSecret = 'bad-secret'
         return endpoint.method(endpoint.path)
           .set('Authorization', helpers.makeAuthHeader(validUser, invalidSecret))
@@ -76,7 +91,7 @@ describe('Protected endpoints', function () {
       })
 
       it(`responds 401 'Unauthorized request' when invalid sub in payload`, () => {
-        const invalidUser = { user_name: 'user-not-existy', id: 1 }
+        const invalidUser = { username: 'user-not-existy', id: 1 }
         return endpoint.method(endpoint.path)
           .set('Authorization', helpers.makeAuthHeader(invalidUser))
           .expect(401, { error: `Unauthorized request` })
