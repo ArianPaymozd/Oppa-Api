@@ -8,6 +8,7 @@ const worksheetsRouter = require('./worksheets/worksheets-route')
 const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-route')
 const classesRouter = require('./classes/classes-route')
+const config = require('./config')
 
 const app = express()
 
@@ -17,7 +18,12 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption))
 app.use(helmet())
-app.use(cors())
+
+const corsOptions = {
+  origin: config.CLIENT_ORIGIN,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 
 app.get(('/'), (req, res) => {
   res.send('Hello, world!')
