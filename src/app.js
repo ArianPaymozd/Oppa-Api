@@ -3,12 +3,11 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
-const { NODE_ENV } = require('./config')
+const { NODE_ENV, CLIENT_ORIGIN } = require('./config')
 const worksheetsRouter = require('./worksheets/worksheets-route')
 const authRouter = require('./auth/auth-router')
 const usersRouter = require('./users/users-route')
 const classesRouter = require('./classes/classes-route')
-const config = require('./config')
 
 const app = express()
 
@@ -19,11 +18,9 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(helmet())
 
-const corsOptions = {
-  origin: 'https://oppalearning.vercel.app',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.use(cors(corsOptions))
+app.use(cors({
+  origin: CLIENT_ORIGIN
+}))
 
 app.get(('/'), (req, res) => {
   res.send('Hello, world!')
