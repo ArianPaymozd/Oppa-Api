@@ -45,7 +45,7 @@ postsRouter
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${post.worksheet_id}`))
           .end()
-      })
+      }).catch(next)
     } catch (error) {
         next(error)
       }

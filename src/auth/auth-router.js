@@ -46,9 +46,8 @@ authRouter
               authToken: AuthService.createJwt(sub, payload),
               user_id: dbUser.id
             })
-          })
-      })
-      .catch(next)
+          }).catch(next)
+      }).catch(next)
   })
 
 

@@ -69,7 +69,7 @@ usersRouter
                 res
                   .status(201)
                   .json(UsersService.serializeUser(user))
-              })
+              }).catch(next)
           }).catch(next)
   })
 
