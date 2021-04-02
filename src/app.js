@@ -20,7 +20,7 @@ app.use(morgan(morganOption))
 app.use(helmet())
 
 const corsOptions = {
-  origin: 'https://oppalearning.vercel.app/',
+  origin: 'https://oppalearning.vercel.app',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions))
