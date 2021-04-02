@@ -10,6 +10,7 @@ const jsonBodyParser = express.json()
 postsRouter
   .route('/')
   .post(requireAuthTeacher, jsonBodyParser, async (req, res, next) => {
+    try {
     const { worksheet_name, class_id, animation_scroll, reading } = req.body
     const newWorksheet = { worksheet_name, class_id, animation_scroll, reading }
 
@@ -45,7 +46,9 @@ postsRouter
           .location(path.posix.join(req.originalUrl, `/${post.worksheet_id}`))
           .end()
       })
-
+    } catch (error) {
+        next(error)
+      }
   })
 
 postsRouter

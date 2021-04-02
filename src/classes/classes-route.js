@@ -67,6 +67,7 @@ classesRouter
 classesRouter
   .route('/students')
   .post(requireAuthStudent, jsonBodyParser, async (req, res, next) => {
+    try {
     const { class_id, student_id, class_password } = req.body
     let newPost = { 
       class_id,  
@@ -121,6 +122,9 @@ classesRouter
           .end()
       })
       .catch(next)
+    } catch (error) {
+      next(error)
+    }
   })
 
 classesRouter
