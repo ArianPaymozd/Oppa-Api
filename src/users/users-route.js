@@ -31,7 +31,7 @@ usersRouter
           error: `Username already exists`
         })
       }
-    })
+    }).catch(next)
 
 
     const passwordError = UsersService.validatePassword(password)
