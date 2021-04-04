@@ -1,6 +1,8 @@
 # Oppa Server API
 
-This is the backend API for the RideSpot app developed using Node.js and Express as well as Postgresql sor the databases
+This is the backend API for the Oppa app developed using Node.js and Express as well as Postgresql sor the databases
+
+Oppa is a site that helps teachers keep students engaged with fun animations, teachers make classes and worksheets that are then viewable by students. The worksheets should contain multi paragraph texts to make use of the scroll animations.
 
 Live App: https://oppalearning.vercel.app/
 
