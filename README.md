@@ -1,107 +1,106 @@
-# RideSpot Server API
+# Oppa Server API
 
-This is the backend API for the RideSpot app
+This is the backend API for the RideSpot app developed using Node.js and Express as well as Postgresql sor the databases
+
+Live App: https://oppalearning.vercel.app/
 
 ## Documentation
-GET: https://immense-headland-15591.herokuapp.com/api/posts,
-Returns all posts
+POST: https://polar-tundra-66284.herokuapp.com/api/auth/login,
+POST LOGIN
+Student Login if "userType" in request body is "student" and Teacher Login if "userType" is "teacher"
+
+
+POST: https://polar-tundra-66284.herokuapp.com/api/users,
+POST USER
+Student User if "userType" in request body is "student" and Teacher User if "userType" is "teacher"
+
+
+GET: https://polar-tundra-66284.herokuapp.com/api/classes/:teacher_id,
+Return all classes for given teacher
+Authorization: teacher required
 Response: content-type: JSON, content: 
 {
     {
-        post_id: INTEGER,
-        title: STRING,
-        sport: STRING,
-        user_id: INT,
-        modified: STRING,
-        spot_description: STRING
-        img: STRING (link),
-        spot_address: STRING,
-        security_level: STRING,
-        difficulty: STRING,
+        class_id: INTEGER
+        class_name: STRING
+        class_password: STRING
+        students: INTEGER
+        worksheets: INTEGER
+        modified: INTEGER
+        teacher_id: INTEGER
     }
 }
 
-GET: https://immense-headland-15591.herokuapp.com/api/posts/:user_id,
-Return all posts for given user
-Authorization: required
+
+GET: https://polar-tundra-66284.herokuapp.com/api/classes/students/:id,
+Return all classes for given student
+Authorization: student required
 Response: content-type: JSON, content: 
 {
     {
-        post_id: INTEGER,
-        title: STRING,
-        sport: STRING,
-        user_id: INT,
-        modified: STRING,
-        spot_description: STRING
-        img: STRING (link),
-        spot_address: STRING,
-        security_level: STRING,
-        difficulty: STRING,        
+        class_id: INTEGER
+        id: INTEGER
+        class_name: STRING
+        class_password: STRING
+        student_id: INTEGER
     }
 }
 
-GET: https://immense-headland-15591.herokuapp.com/api/users/:user_id,
-Return user information by user_id
-Authorization: required
-Response: content-type: JSON, content: 
+
+POST: https://polar-tundra-66284.herokuapp.com/api/classes,
+Adds an entry to classes list
+Authorization: teacher required
+Request Body: 
 {
-    full_name: STRING,
-    email: STRING,
-    username: STRING,
-    password: STRING,
-    id: INT
+        class_name: STRING REQURIED
+        class_password: STRING REQURIED
+        teacher_id: INTEGER REQURIED
 }
 
 
-DELETE: https://immense-headland-15591.herokuapp.com/api/posts/:post_id,
-Delete post by post_id
-Authorization: required
+DELETE: https://polar-tundra-66284.herokuapp.com/api/:class_id,
+Delete post by class_id
+Authorization: teacher required
 Response: status(204)
 
-POST: https://immense-headland-15591.herokuapp.com/api/posts,
-Adds an entry to posts list
-Authorization: required
-Request Body: 
+
+GET: https://polar-tundra-66284.herokuapp.com/api/worksheets/:class_id,
+Return all worksheets for given class
+Authorization: teacher required
+Response: content-type: JSON, content: 
 {
-    post_id: INTEGER, required
-    title: STRING, required
-    sport: STRING, required
-    user_id: INT, required
-    modified: STRING, required
-    spot_description: STRING, required
-    img: STRING (link), required
-    spot_address: STRING, required
-    security_level: STRING, required
-    difficulty: STRING, required       
-}
-Response: content-type: JSON, status(201)
-{
-    post_id: INTEGER,
-    title: STRING,
-    sport: STRING,
-    user_id: INT,
-    modified: STRING,
-    spot_description: STRING,
-    img: STRING (link),
-    spot_address: STRING,
-    security_level: STRING,
-    difficulty: STRING,        
+    {
+        worksheet_id: INTEGER
+        worksheet_name: STRING
+        class_id: INTEGER
+        reading: STRING
+        animation_scroll: STRING
+    }
 }
 
-POST: https://immense-headland-15591.herokuapp.com/api/users,
-Adds a user to user list
-Request Body: 
+
+GET: https://polar-tundra-66284.herokuapp.com/api/worksheets/students/:class_id,
+Return all worksheets for given class
+Authorization: student required
+Response: content-type: JSON, content: 
 {
-    full_name: STRING, required
-    email: STRING, required
-    username: STRING, required
-    password: STRING, required     
-}
-Response: content-type: JSON, status(201)
-{
-    full_name: STRING,
-    email: STRING,
-    username: STRING,
-    password: STRING,   
+    {
+        worksheet_id: INTEGER
+        worksheet_name: STRING
+        class_id: INTEGER
+        reading: STRING
+        animation_scroll: STRING
+    }
 }
 
+
+POST: https://polar-tundra-66284.herokuapp.com/api/worksheets,
+Adds an entry to classes list
+Authorization: teacher required
+Request Body: 
+{
+        worksheet_name: STRING REQUIRED
+        class_id: INTEGER REQUIRED
+        reading: STRING REQUIRED
+        animation_scroll: STRING REQUIRED
+}
